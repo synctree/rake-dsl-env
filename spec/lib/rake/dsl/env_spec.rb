@@ -111,4 +111,28 @@ describe Rake::DSL::Env do
       it { should be false }
     end
   end
+
+  describe 'extra methods' do
+    subject { dsl.env }
+
+    context 'without custom configuration' do
+      it { should_not respond_to(:extra) }
+    end
+
+    context 'with custom configuration' do
+      class CustomConfiguration < Rake::Configuration
+        def extra; end
+      end
+
+      before do
+        Rake::DSL::Env.config_class = CustomConfiguration
+      end
+
+      after do
+        Rake::DSL::Env.config_class = nil
+      end
+
+      it { should respond_to(:extra) }
+    end
+  end
 end
